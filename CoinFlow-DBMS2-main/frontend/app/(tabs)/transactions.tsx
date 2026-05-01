@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, ScrollView, RefreshControl, TouchableOpacity, Text } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useTransactions } from '../../hooks/useTransaction';
 import TransactionForm from '../../components/TransactionForm';
 import TransactionList from '../../components/TransactionList';
@@ -20,9 +21,9 @@ const TransactionScreen: React.FC = () => {
   };
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View className="flex-1 bg-slate-950">
       <ScrollView 
-        className="flex-1 p-4"
+        className="flex-1 px-4 pt-4"
         refreshControl={
           <RefreshControl refreshing={loading} onRefresh={refreshTransactions} />
         }
@@ -30,10 +31,11 @@ const TransactionScreen: React.FC = () => {
         {/* Sync Button */}
         <TouchableOpacity
           onPress={handleSync}
-          className="bg-green-500 rounded-lg p-4 mb-4"
+          className="mb-4 flex-row items-center justify-center rounded-2xl bg-emerald-500 px-4 py-4 shadow-lg shadow-emerald-500/30"
         >
-          <Text className="text-white text-center font-semibold text-lg">
-            🔄 Sync Pending Transactions
+          <Ionicons name="sync-outline" size={18} color="#FFFFFF" />
+          <Text className="ml-2 text-center text-base font-semibold text-white">
+            Sync Pending Transactions
           </Text>
         </TouchableOpacity>
 
@@ -43,7 +45,7 @@ const TransactionScreen: React.FC = () => {
         />
         
         <View className="mt-6">
-          <Text className="text-lg font-semibold mb-3 text-gray-800">All Transactions</Text>
+          <Text className="mb-3 text-lg font-semibold text-white">All Transactions</Text>
           <TransactionList
             transactions={transactions}
             onDelete={deleteTransaction}

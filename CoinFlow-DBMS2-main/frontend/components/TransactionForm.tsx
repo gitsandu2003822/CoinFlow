@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Transaction } from '../services/database';
 
 interface TransactionFormProps {
@@ -53,93 +54,121 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSubmit, backendAvai
   };
 
   return (
-    <ScrollView className="bg-white rounded-lg p-4">
-      <Text className="text-lg font-bold mb-4">Add New Transaction</Text>
-
-      {/* Backend Status Indicator */}
-      {backendAvailable && (
-        <View className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-          <Text className="text-blue-800 text-sm">
-            💡 Transactions will be saved locally and synchronized with cloud storage.
-          </Text>
-        </View>
-      )}
-
-      {!backendAvailable && (
-        <View className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
-          <Text className="text-yellow-800 text-sm">
-            ⚠️ Cloud storage is unavailable. Transactions will be saved locally only.
-          </Text>
-        </View>
-      )}
-
-      {/* Type Selection */}
-      <View className="flex-row mb-4">
-        <TouchableOpacity
-          className={`flex-1 py-3 rounded-l-lg ${
-            type === 'expense' ? 'bg-red-500' : 'bg-gray-300'
-          }`}
-          onPress={() => setType('expense')}
-        >
-          <Text className="text-center text-white font-semibold">Expense</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className={`flex-1 py-3 rounded-r-lg ${
-            type === 'income' ? 'bg-green-500' : 'bg-gray-300'
-          }`}
-          onPress={() => setType('income')}
-        >
-          <Text className="text-center text-white font-semibold">Income</Text>
-        </TouchableOpacity>
+    <ScrollView className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg shadow-slate-200/70">
+      <View className="bg-slate-900 px-5 py-4">
+        <Text className="text-xs font-semibold uppercase tracking-[2px] text-sky-200">Transaction Entry</Text>
+        <Text className="mt-1 text-xl font-bold text-white">Add New Transaction</Text>
+        <Text className="mt-2 text-sm leading-5 text-slate-300">
+          Keep your income and expenses organized in one place.
+        </Text>
       </View>
 
-      {/* Amount */}
-      <TextInput
-        className="border border-gray-300 rounded-lg p-3 mb-4"
-        placeholder="Amount"
-        value={amount}
-        onChangeText={setAmount}
-        keyboardType="numeric"
-      />
+      <View className="px-4 py-5">
+        {/* Backend Status Indicator */}
+        {backendAvailable && (
+          <View className="mb-4 flex-row rounded-2xl border border-sky-100 bg-sky-50 px-4 py-3">
+            <View className="mr-3 h-10 w-10 items-center justify-center rounded-2xl bg-sky-100">
+              <Ionicons name="cloud-done-outline" size={20} color="#0284C7" />
+            </View>
+            <Text className="flex-1 text-sm leading-5 text-sky-900">
+              Transactions will be saved locally and synchronized with cloud storage.
+            </Text>
+          </View>
+        )}
 
-      {/* Description */}
-      <TextInput
-        className="border border-gray-300 rounded-lg p-3 mb-4"
-        placeholder="Description"
-        value={description}
-        onChangeText={setDescription}
-      />
+        {!backendAvailable && (
+          <View className="mb-4 flex-row rounded-2xl border border-amber-100 bg-amber-50 px-4 py-3">
+            <View className="mr-3 h-10 w-10 items-center justify-center rounded-2xl bg-amber-100">
+              <Ionicons name="cloud-offline-outline" size={20} color="#D97706" />
+            </View>
+            <Text className="flex-1 text-sm leading-5 text-amber-900">
+              Cloud storage is unavailable. Transactions will be saved locally only.
+            </Text>
+          </View>
+        )}
 
-      {/* Category */}
-      <Text className="font-semibold mb-2">Category</Text>
-      <View className="flex-row flex-wrap mb-4">
-        {categories[type].map((cat) => (
+        {/* Type Selection */}
+        <View className="mb-4 flex-row rounded-2xl bg-slate-100 p-1">
           <TouchableOpacity
-            key={cat}
-            className={`px-3 py-2 rounded-lg m-1 ${
-              category === cat ? 'bg-blue-500' : 'bg-gray-200'
+            className={`flex-1 flex-row items-center justify-center rounded-2xl py-3 ${
+              type === 'expense' ? 'bg-rose-500 shadow-sm' : 'bg-transparent'
             }`}
-            onPress={() => setCategory(cat)}
+            onPress={() => setType('expense')}
           >
-            <Text className={category === cat ? 'text-white' : 'text-gray-700'}>
-              {cat}
+            <Ionicons name="remove-circle-outline" size={16} color={type === 'expense' ? '#FFFFFF' : '#64748B'} />
+            <Text className={`ml-2 font-semibold ${type === 'expense' ? 'text-white' : 'text-slate-600'}`}>
+              Expense
             </Text>
           </TouchableOpacity>
-        ))}
-      </View>
+          <TouchableOpacity
+            className={`flex-1 flex-row items-center justify-center rounded-2xl py-3 ${
+              type === 'income' ? 'bg-emerald-500 shadow-sm' : 'bg-transparent'
+            }`}
+            onPress={() => setType('income')}
+          >
+            <Ionicons name="add-circle-outline" size={16} color={type === 'income' ? '#FFFFFF' : '#64748B'} />
+            <Text className={`ml-2 font-semibold ${type === 'income' ? 'text-white' : 'text-slate-600'}`}>
+              Income
+            </Text>
+          </TouchableOpacity>
+        </View>
 
-      {/* Submit Button */}
-      <TouchableOpacity
-        className={`bg-blue-500 rounded-lg p-4 ${
-          loading ? 'opacity-50' : ''
-        }`}
-        onPress={handleSubmit}
-        disabled={loading}
-      >
-        <Text className="text-white text-center font-semibold text-lg">
-          {loading ? 'Adding...' : 'Add Transaction'}
-        </Text>
-      </TouchableOpacity>
+        {/* Amount */}
+        <Text className="mb-2 text-xs font-semibold uppercase tracking-[1.5px] text-slate-500">Amount</Text>
+        <TextInput
+          className="mb-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900"
+          placeholder="Amount"
+          placeholderTextColor="#94A3B8"
+          value={amount}
+          onChangeText={setAmount}
+          keyboardType="numeric"
+        />
+
+        {/* Description */}
+        <Text className="mb-2 text-xs font-semibold uppercase tracking-[1.5px] text-slate-500">Description</Text>
+        <TextInput
+          className="mb-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900"
+          placeholder="Description"
+          placeholderTextColor="#94A3B8"
+          value={description}
+          onChangeText={setDescription}
+        />
+
+        {/* Category */}
+        <View className="mb-2 flex-row items-center justify-between">
+          <Text className="text-xs font-semibold uppercase tracking-[1.5px] text-slate-500">Category</Text>
+          <Text className="text-xs text-slate-400">Choose one</Text>
+        </View>
+        <View className="mb-4 flex-row flex-wrap">
+          {categories[type].map((cat) => (
+            <TouchableOpacity
+              key={cat}
+              className={`mr-2 mb-2 rounded-full px-4 py-2 ${
+                category === cat ? 'bg-slate-900' : 'bg-slate-100'
+              }`}
+              onPress={() => setCategory(cat)}
+            >
+              <Text className={`font-medium ${category === cat ? 'text-white' : 'text-slate-700'}`}>
+                {cat}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        {/* Submit Button */}
+        <TouchableOpacity
+          className={`flex-row items-center justify-center rounded-2xl bg-slate-900 px-4 py-4 ${
+            loading ? 'opacity-50' : ''
+          }`}
+          onPress={handleSubmit}
+          disabled={loading}
+        >
+          <Ionicons name="sparkles-outline" size={18} color="#FFFFFF" />
+          <Text className="ml-2 text-center text-base font-semibold text-white">
+            {loading ? 'Adding...' : 'Add Transaction'}
+          </Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 };
