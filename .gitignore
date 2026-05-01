@@ -1,0 +1,20 @@
+# dependencies
+node_modules/
+
+# Expo / React Native cache
+.expo/
+.expo-shared/
+
+# build files
+dist/
+build/
+
+# environment files
+.env
+
+# logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
